@@ -1,4 +1,5 @@
 import './SigninPage.css';
+import { Auth } from 'aws-amplify';
 import React from "react";
 import {ReactComponent as Logo} from '../components/svg/logo.svg';
 import { Link } from "react-router-dom";
@@ -13,14 +14,25 @@ export default function SigninPage() {
   const [errors, setErrors] = React.useState('');
 
   const onsubmit = async (event) => {
-    event.preventDefault();
     setErrors('')
-    console.log('onsubmit')
-    if (Cookies.get('user.email') === email && Cookies.get('user.password') === password){
-      Cookies.set('user.logged_in', true)
-      window.location.href = "/"
-    } else {
-      setErrors("Email and password is incorrect or account doesn't exist")
+    event.preventDefault();
+    try {
+      Auth.signIn(username, password)
+      .then(user => {
+        localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
+        window.location.href = "/"
+      })
+      .catch(error => { 
+        if (error.code == 'UserNotConfirmedException') {
+          window.location.href = "/confirm"
+        }
+        setErrors(error.message) 
+      });
+    } catch (error) {
+      if (error.code == 'UserNotConfirmedException') {
+        window.location.href = "/confirm"
+      }
+      setErrors(error.message)
     }
     return false
   }
@@ -36,7 +48,7 @@ export default function SigninPage() {
   if (errors){
     el_errors = <div className='errors'>{errors}</div>;
   }
-
+  {el_errors}
   return (
     <article className="signin-article">
       <div className='signin-info'>
