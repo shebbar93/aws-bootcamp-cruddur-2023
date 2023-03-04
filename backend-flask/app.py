@@ -28,7 +28,7 @@ from time import strftime
 # LOGGER.addHandler(cw_handler)
 # LOGGER.info("APP.PY LOGS")
 
-# X - RAY
+# # X - RAY
 # from aws_xray_sdk.core import xray_recorder
 # from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
 
@@ -65,7 +65,7 @@ def init_rollbar():
     # send exceptions from `app` to rollbar, using flask's signal system.
     got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
 
-# XRAY configurations
+# # XRAY configurations
 # xray_url = os.getenv("AWS_XRAY_URL")
 # xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
 # XRayMiddleware(app, xray_recorder)
@@ -94,6 +94,7 @@ cors = CORS(
   methods="OPTIONS,GET,HEAD,POST"
 )
 
+# Cloud watch logs
 # @app.after_request
 # def after_request(response):
 #     timestamp = strftime('[%Y-%b-%d %H:%M]')
@@ -147,6 +148,7 @@ def data_home():
   return data, 200
 
 @app.route("/api/activities/notifications", methods=['GET'])
+# @xray_recorder.capture('notifications')
 def data_notifications():
   data = NotificationActivities.run()
   return data, 200
