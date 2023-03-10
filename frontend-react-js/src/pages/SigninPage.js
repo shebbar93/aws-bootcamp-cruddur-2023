@@ -1,7 +1,7 @@
 import './SigninPage.css';
 import { Auth } from 'aws-amplify';
 import React from "react";
-import {ReactComponent as Logo} from '../components/svg/logo.svg';
+import { ReactComponent as Logo } from '../components/svg/logo.svg';
 import { Link } from "react-router-dom";
 
 // [TODO] Authenication
@@ -17,17 +17,17 @@ export default function SigninPage() {
     setErrors('')
     event.preventDefault();
     try {
-      Auth.signIn(username, password)
-      .then(user => {
-        localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
-        window.location.href = "/"
-      })
-      .catch(error => { 
-        if (error.code == 'UserNotConfirmedException') {
-          window.location.href = "/confirm"
-        }
-        setErrors(error.message) 
-      });
+      Auth.signIn(email, password)
+        .then(user => {
+          localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
+          window.location.href = "/"
+        })
+        .catch(error => {
+          if (error.code == 'UserNotConfirmedException') {
+            window.location.href = "/confirm"
+          }
+          setErrors(error.message)
+        });
     } catch (error) {
       if (error.code == 'UserNotConfirmedException') {
         window.location.href = "/confirm"
@@ -45,17 +45,17 @@ export default function SigninPage() {
   }
 
   let el_errors;
-  if (errors){
+  if (errors) {
     el_errors = <div className='errors'>{errors}</div>;
   }
-  {el_errors}
+  { el_errors }
   return (
     <article className="signin-article">
       <div className='signin-info'>
         <Logo className='logo' />
       </div>
       <div className='signin-wrapper'>
-        <form 
+        <form
           className='signin_form'
           onSubmit={onsubmit}
         >
@@ -66,7 +66,7 @@ export default function SigninPage() {
               <input
                 type="text"
                 value={email}
-                onChange={email_onchange} 
+                onChange={email_onchange}
               />
             </div>
             <div className='field text_field password'>
@@ -74,7 +74,7 @@ export default function SigninPage() {
               <input
                 type="password"
                 value={password}
-                onChange={password_onchange} 
+                onChange={password_onchange}
               />
             </div>
           </div>
