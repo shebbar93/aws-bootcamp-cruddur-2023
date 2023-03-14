@@ -159,12 +159,12 @@ def data_create_message():
 def data_home():
     access_token = extract_access_token(request.headers)
     app.logger.debug(request.headers)
-    try:
-        claims = cognito_token_verification.verify(access_token)
-        app.logger.debug("Authenticated")
-    except TokenVerifyError as e:
-        app.logger.debug("Token verification failed")
-        app.logger.debug(e)
+    # try:
+    #     claims = cognito_token_verification.verify(access_token)
+    #     app.logger.debug("Authenticated")
+    # except TokenVerifyError as e:
+    #     app.logger.debug("Token verification failed")
+    #     app.logger.debug(e)
     # data = HomeActivities.run(LOGGER)
     data = HomeActivities.run()
     return data, 200
